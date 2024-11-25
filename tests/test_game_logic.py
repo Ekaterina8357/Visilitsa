@@ -1,13 +1,13 @@
 import sys
 import os
+from game_logic import Hangman  # Импортируем игровой класс Hangman для тестирования
+import unittest
 
 # Добавляем путь к родительской директории, чтобы Python смог найти game_logic.py
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.insert(0, parent_dir)
 
-from game_logic import Hangman  # Импортируем игровой класс Hangman для тестирования
-import unittest
 
 class TestHangman(unittest.TestCase):
     """

@@ -1,13 +1,15 @@
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtWidgets import QLineEdit, QPushButton, QVBoxLayout, QMessageBox
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt
 from game_logic import Hangman
+
 
 class HangmanGUI(QWidget):
     """
     Класс HangmanGUI представляет графический интерфейс для игры Виселица.
-    
+
     Атрибуты:
         game (Hangman): Экземпляр класса Hangman, содержащий игровую логику.
     """
@@ -27,7 +29,7 @@ class HangmanGUI(QWidget):
         # Устанавливаем заголовок окна
         self.setWindowTitle('Игра Виселица')
         self.setFixedSize(1200, 600)  # Устанавливаем фиксированный размер окна
-        
+
         # Метка для отображения слова, которое необходимо угадать
         self.word_label = QLabel(self.game.get_guessed_word(), self)
         self.word_label.setAlignment(Qt.AlignCenter)
@@ -43,23 +45,23 @@ class HangmanGUI(QWidget):
         self.guess_button = QPushButton('Угадать', self)
         self.guess_button.setFixedHeight(40)
         self.guess_button.setStyleSheet("font-size: 16px;")
-        
+
         # Кнопка для начала новой игры
         self.new_game_button = QPushButton('Новая игра', self)
         self.new_game_button.setFixedHeight(40)
         self.new_game_button.setStyleSheet("font-size: 16px;")
-        
+
         # Кнопка для выхода из игры
         self.quit_button = QPushButton('Выйти из игры', self)
         self.quit_button.setFixedHeight(40)
         self.quit_button.setStyleSheet("font-size: 16px;")
-        
+
         # Метка для отображения изображения виселицы
         self.hangman_image = QLabel(self)
         self.update_hangman_image()  # Начальная настройка изображения
         self.hangman_image.setFixedSize(200, 200)
         self.hangman_image.setAlignment(Qt.AlignCenter)
-        
+
         # Метка для отображения статуса игры (сообщения для игрока)
         self.status_label = QLabel("", self)
         self.status_label.setAlignment(Qt.AlignCenter)
@@ -75,11 +77,14 @@ class HangmanGUI(QWidget):
         vbox.addWidget(self.new_game_button)
         vbox.addWidget(self.quit_button)
         self.setLayout(vbox)
-        
+
         # Подключение сигналов к соответствующим методам
-        self.guess_button.clicked.connect(self.make_guess)  # Кнопка "Угадать" вызывает метод make_guess
-        self.new_game_button.clicked.connect(self.start_new_game)  # Кнопка "Новая игра" вызывает метод start_new_game
-        self.quit_button.clicked.connect(self.quit_game)  # Кнопка "Выйти из игры" вызывает метод quit_game
+        # Кнопка "Угадать" вызывает метод make_guess
+        self.guess_button.clicked.connect(self.make_guess)
+        # Кнопка "Новая игра" вызывает метод start_new_game
+        self.new_game_button.clicked.connect(self.start_new_game)
+        # Кнопка "Выйти из игры" вызывает метод quit_game
+        self.quit_button.clicked.connect(self.quit_game)
 
     def make_guess(self):
         """
@@ -88,12 +93,15 @@ class HangmanGUI(QWidget):
         """
         letter = self.input_line.text().upper()  # Получение буквы из поля ввода
         if not letter.isalpha():  # Проверка, что введена буква
-            QMessageBox.warning(self, 'Предупреждение', 'Пожалуйста, введите допустимую букву.')
+            title = 'Предупреждение!'
+            message = 'Пожалуйста, введите допустимую букву.'
+            QMessageBox.warning(self, title, message)
             return
 
         # Проверка буквы и обновление состояния игры
         correct, message = self.game.guess_letter(letter)
-        self.word_label.setText(self.game.get_guessed_word())  # Обновление отображаемого слова
+        # Обновление отображаемого слова
+        self.word_label.setText(self.game.get_guessed_word())
         self.input_line.clear()  # Очистка поля ввода
         self.update_hangman_image()  # Обновление изображения виселицы
 
@@ -114,7 +122,8 @@ class HangmanGUI(QWidget):
         Сбрасывает текущее состояние игры и обновляет интерфейс.
         """
         self.game = Hangman()  # Создание нового экземпляра игры
-        self.word_label.setText(self.game.get_guessed_word())  # Сброс слова на новое
+        # Сброс слова на новое
+        self.word_label.setText(self.game.get_guessed_word())
         self.input_line.clear()  # Очистка поля ввода
         self.status_label.clear()  # Очистка метки статуса
         self.update_hangman_image()  # Сброс изображения виселицы
